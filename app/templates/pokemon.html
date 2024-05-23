@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pokédex</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 50px;
+        }
+        .pokemon-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            text-align: left;
+        }
+        .pokemon-header {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .pokemon-info {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pokédex</h1>
+    <div class="pokemon-container">
+        {% if pokemon %}
+            <div class="pokemon-header">{{ pokemon.name | capitalize }}</div>
+            <div class="pokemon-info"><strong>Type:</strong> {{ pokemon.types }}</div>
+            <div class="pokemon-info"><strong>Height:</strong> {{ pokemon.height }} decimetres</div>
+            <div class="pokemon-info"><strong>Weight:</strong> {{ pokemon.weight }} hectograms</div>
+        {% else %}
+            <div class="pokemon-info">Entrer un Pokémon ID dans URL pour les details.</div>
+        {% endif %}
+    </div>
+</body>
+</html>

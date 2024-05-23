@@ -1,32 +1,29 @@
 # app/main.py
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.orm import Session
-import models, schemas
-from database import SessionLocal, engine
-
-models.Base.metadata.create_all(bind=engine)
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.requests import Request
+from fastapi.staticfiles import StaticFiles
+from .CRUD import get_pokemon, get_all_pokemons
+from .schemas import PokemonResponse
 
 app = FastAPI()
+templates = Jinja2Templates(directory="app/templates")
 
-# Dependency to get the database session
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+app.mount("/images", StaticFiles(directory="images"), name="images")
 
-@app.post("/pokemon/", response_model=schemas.Pokemon)
-def create_pokemon(pokemon: schemas.PokemonCreate, db: Session = Depends(get_db)):
-    db_pokemon = models.Pokemon(**pokemon.dict())
-    db.add(db_pokemon)
-    db.commit()
-    db.refresh(db_pokemon)
-    return db_pokemon
+@app.get("/api/pokemons", response_model=list[PokemonResponse])
+def read_pokemons():
+    return get_all_pokemons()
 
-@app.get("/pokemon/{pokemon_id}", response_model=schemas.Pokemon)
-def read_pokemon(pokemon_id: int, db: Session = Depends(get_db)):
-    pokemon = db.query(models.Pokemon).filter(models.Pokemon.id == pokemon_id).first()
+@app.get("/api/pokemons/{pokemon_id}", response_model=PokemonResponse)
+def read_pokemon(pokemon_id: int):
+    pokemon = get_pokemon(pokemon_id)
     if pokemon is None:
         raise HTTPException(status_code=404, detail="Pokemon not found")
     return pokemon
+
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request):
+    pokemons = get_all_pokemons()
+    return templates.TemplateResponse("index.html", {"request": request, "pokemons": pokemons})

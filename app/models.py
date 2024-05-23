@@ -1,13 +1,19 @@
 # app/models.py
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from pydantic import BaseModel
+from typing import List, Dict
 
-Base = declarative_base()
+class BaseStats(BaseModel):
+    hp: int
+    attack: int
+    defense: int
+    sp_attack: int
+    sp_defense: int
+    speed: int
 
-class Pokemon(Base):
-    __tablename__ = 'pokemon'
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    type = Column(String, index=True)
-    description = Column(String)
+class Pokemon(BaseModel):
+    id: int
+    name: str
+    type: List[str]
+    abilities: List[str]
+    base_stats: BaseStats
+    image_url: str
