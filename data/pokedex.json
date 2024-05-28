@@ -1,5 +1,0 @@
-{
-    "1": {"id": 1, "name": "Bulbasaur", "type": "Grass/Poison", "abilities": ["Overgrow", "Chlorophyll"]},
-    "2": {"id": 2, "name": "Ivysaur", "type": "Grass/Poison", "abilities": ["Overgrow", "Chlorophyll"]},
-    "3": {"id": 3, "name": "Venusaur", "type": "Grass/Poison", "abilities": ["Overgrow", "Chlorophyll"]}
-}
