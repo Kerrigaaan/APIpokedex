@@ -18,9 +18,9 @@ def get_pokemon_by_id(pokemon_id):
     pokemon = get_pokemon(pokemon_id)
     if pokemon:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT type FROM pokemon_type WHERE pokemon_id = %s", (pokemon_id,))
+        cursor.execute("SELECT t.type FROM pokemon_type pt JOIN type t ON pt.type_id = t.id WHERE pt.pokemon_id = %s", (pokemon_id,))
         types = [row['type'] for row in cursor.fetchall()]
-        cursor.execute("SELECT ability FROM pokemon_ability WHERE pokemon_id = %s", (pokemon_id,))
+        cursor.execute("SELECT a.ability FROM pokemon_ability pa JOIN ability a ON pa.ability_id = a.id WHERE pa.pokemon_id = %s", (pokemon_id,))
         abilities = [row['ability'] for row in cursor.fetchall()]
         cursor.close()
         pokemon['types'] = types
@@ -37,7 +37,7 @@ def create_pokemon(pokemon_data):
     """, pokemon_data)
     conn.commit()
     cursor.close()
-    return {"message": "Nouveau Pokemon avec succes"}
+    return {"message": "Nouveau Pokemon avec succès"}
 
 def update_pokemon(pokemon_id, pokemon_data):
     cursor = conn.cursor()
@@ -50,7 +50,7 @@ def update_pokemon(pokemon_id, pokemon_data):
     """, pokemon_data)
     conn.commit()
     cursor.close()
-    return {"message": "Pokemon mise a jour success"}
+    return {"message": "Pokemon mis à jour avec succès"}
 
 def delete_pokemon(pokemon_id):
     cursor = conn.cursor()
@@ -59,7 +59,7 @@ def delete_pokemon(pokemon_id):
     cursor.execute("DELETE FROM pokemon WHERE id = %s", (pokemon_id,))
     conn.commit()
     cursor.close()
-    return {"message": "Pokemon supprimer success"}
+    return {"message": "Pokemon supprimé avec succès"}
 
 def get_all_pokemons(skip: int = 0, limit: int = 10):
     cursor = conn.cursor(dictionary=True)
@@ -70,30 +70,30 @@ def get_all_pokemons(skip: int = 0, limit: int = 10):
 
 def add_pokemon_type(pokemon_id, type):
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO pokemon_type (pokemon_id, type) VALUES (%s, %s)", (pokemon_id, type))
+    cursor.execute("INSERT INTO pokemon_type (pokemon_id, type_id) SELECT %s, id FROM type WHERE type = %s", (pokemon_id, type))
     conn.commit()
     cursor.close()
-    return {"message": "Type ajouter success"}
+    return {"message": "Type ajouté avec succès"}
 
 def add_pokemon_ability(pokemon_id, ability):
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO pokemon_ability (pokemon_id, ability) VALUES (%s, %s)", (pokemon_id, ability))
+    cursor.execute("INSERT INTO pokemon_ability (pokemon_id, ability_id) SELECT %s, id FROM ability WHERE ability = %s", (pokemon_id, ability))
     conn.commit()
     cursor.close()
-    return {"message": "Capaciter ajouter success"}
+    return {"message": "Capacité ajoutée avec succès"}
 
 def delete_pokemon_type(pokemon_id, type):
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM pokemon_type WHERE pokemon_id = %s AND type = %s", (pokemon_id, type))
+    cursor.execute("DELETE pt FROM pokemon_type pt JOIN type t ON pt.type_id = t.id WHERE pt.pokemon_id = %s AND t.type = %s", (pokemon_id, type))
     conn.commit()
     cursor.close()
-    return {"message": "Type supprimer success"}
+    return {"message": "Type supprimé avec succès"}
 
 def delete_pokemon_ability(pokemon_id, ability):
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM pokemon_ability WHERE pokemon_id = %s AND ability = %s", (pokemon_id, ability))
+    cursor.execute("DELETE pa FROM pokemon_ability pa JOIN ability a ON pa.ability_id = a.id WHERE pa.pokemon_id = %s AND a.ability = %s", (pokemon_id, ability))
     conn.commit()
     cursor.close()
-    return {"message": "Competence supprimer success"}
+    return {"message": "Capacité supprimée avec succès"}
 
 

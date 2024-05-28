@@ -1,6 +1,10 @@
+-- Créer la base de données si elle n'existe pas
 CREATE DATABASE IF NOT EXISTS pokedex;
+
+-- Utiliser la base de données
 USE pokedex;
 
+-- Créer la table pour les Pokémon
 CREATE TABLE IF NOT EXISTS pokemon (
     id INT PRIMARY KEY,
     name VARCHAR(50),
@@ -13,18 +17,37 @@ CREATE TABLE IF NOT EXISTS pokemon (
     image_url VARCHAR(255)
 );
 
+-- Créer la table pour les types de Pokémon
+CREATE TABLE IF NOT EXISTS type (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    type VARCHAR(50) UNIQUE
+);
+
+-- Créer la table de relation entre Pokémon et types
 CREATE TABLE IF NOT EXISTS pokemon_type (
     pokemon_id INT,
-    type VARCHAR(50),
-    FOREIGN KEY (pokemon_id) REFERENCES pokemon(id)
+    type_id INT,
+    FOREIGN KEY (pokemon_id) REFERENCES pokemon(id),
+    FOREIGN KEY (type_id) REFERENCES type(id),
+    PRIMARY KEY (pokemon_id, type_id)
 );
 
+-- Créer la table pour les capacités de Pokémon
+CREATE TABLE IF NOT EXISTS ability (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    ability VARCHAR(50) UNIQUE
+);
+
+-- Créer la table de relation entre Pokémon et capacités
 CREATE TABLE IF NOT EXISTS pokemon_ability (
     pokemon_id INT,
-    ability VARCHAR(50),
-    FOREIGN KEY (pokemon_id) REFERENCES pokemon(id)
+    ability_id INT,
+    FOREIGN KEY (pokemon_id) REFERENCES pokemon(id),
+    FOREIGN KEY (ability_id) REFERENCES ability(id),
+    PRIMARY KEY (pokemon_id, ability_id)
 );
 
+-- Insérer des données de base pour les Pokémon
 INSERT INTO pokemon (id, name, hp, attack, defense, sp_attack, sp_defense, speed, image_url) VALUES
 (1, 'Bulbasaur', 45, 49, 49, 65, 65, 45, '/images/1.png'),
 (2, 'Ivysaur', 60, 62, 63, 80, 80, 60, '/images/2.png'),
@@ -67,37 +90,71 @@ INSERT INTO pokemon (id, name, hp, attack, defense, sp_attack, sp_defense, speed
 (39, 'Jigglypuff', 115, 45, 20, 45, 25, 20, '/images/39.png'),
 (40, 'Wigglytuff', 140, 70, 45, 85, 50, 45, '/images/40.png');
 
-INSERT INTO pokemon_type (pokemon_id, type) VALUES
-(1, 'Grass'), (1, 'Poison'), (2, 'Grass'), (2, 'Poison'), (3, 'Grass'), (3, 'Poison'),
-(4, 'Fire'), (5, 'Fire'), (6, 'Fire'), (6, 'Flying'), (7, 'Water'), (8, 'Water'), (9, 'Water'),
-(10, 'Bug'), (11, 'Bug'), (12, 'Bug'), (12, 'Flying'), (13, 'Bug'), (13, 'Poison'), 
-(14, 'Bug'), (14, 'Poison'), (15, 'Bug'), (15, 'Poison'), (16, 'Normal'), (16, 'Flying'), 
-(17, 'Normal'), (17, 'Flying'), (18, 'Normal'), (18, 'Flying'), (19, 'Normal'), 
-(20, 'Normal'), (21, 'Normal'), (21, 'Flying'), (22, 'Normal'), (22, 'Flying'), 
-(23, 'Poison'), (24, 'Poison'), (25, 'Electric'), (26, 'Electric'), (27, 'Ground'), 
-(28, 'Ground'), (29, 'Poison'), (30, 'Poison'), (31, 'Poison'), (31, 'Ground'), 
-(32, 'Poison'), (33, 'Poison'), (34, 'Poison'), (34, 'Ground'), (35, 'Fairy'), 
-(36, 'Fairy'), (37, 'Fire'), (38, 'Fire'), (39, 'Normal'), (39, 'Fairy'), 
-(40, 'Normal'), (40, 'Fairy');
+-- Insérer des types de Pokémon
+INSERT INTO type (type) VALUES ('Grass'), ('Poison'), ('Fire'), ('Flying'), ('Water'), ('Bug'), ('Normal'), ('Electric'), ('Ground'), ('Fairy');
 
-INSERT INTO pokemon_ability (pokemon_id, ability) VALUES
-(1, 'Overgrow'), (1, 'Chlorophyll'), (2, 'Overgrow'), (2, 'Chlorophyll'), (3, 'Overgrow'), 
-(3, 'Chlorophyll'), (4, 'Blaze'), (4, 'Solar Power'), (5, 'Blaze'), (5, 'Solar Power'), 
-(6, 'Blaze'), (6, 'Solar Power'), (7, 'Torrent'), (7, 'Rain Dish'), (8, 'Torrent'), 
-(8, 'Rain Dish'), (9, 'Torrent'), (9, 'Rain Dish'), (10, 'Shield Dust'), (10, 'Run Away'), 
-(11, 'Shed Skin'), (12, 'Compound Eyes'), (12, 'Tinted Lens'), (13, 'Shield Dust'), 
-(13, 'Run Away'), (14, 'Shed Skin'), (15, 'Swarm'), (15, 'Sniper'), (16, 'Keen Eye'), 
-(16, 'Tangled Feet'), (16, 'Big Pecks'), (17, 'Keen Eye'), (17, 'Tangled Feet'), 
-(17, 'Big Pecks'), (18, 'Keen Eye'), (18, 'Tangled Feet'), (18, 'Big Pecks'), 
-(19, 'Run Away'), (19, 'Guts'), (20, 'Run Away'), (20, 'Guts'), (20, 'Hustle'), 
-(21, 'Keen Eye'), (21, 'Sniper'), (22, 'Keen Eye'), (22, 'Sniper'), (23, 'Intimidate'), 
-(23, 'Shed Skin'), (23, 'Unnerve'), (24, 'Intimidate'), (24, 'Shed Skin'), (24, 'Unnerve'), 
-(25, 'Static'), (25, 'Lightning Rod'), (26, 'Static'), (26, 'Lightning Rod'), (27, 'Sand Veil'), 
-(27, 'Sand Rush'), (28, 'Sand Veil'), (28, 'Sand Rush'), (29, 'Poison Point'), 
-(29, 'Rivalry'), (29, 'Hustle'), (30, 'Poison Point'), (30, 'Rivalry'), (30, 'Hustle'), 
-(31, 'Poison Point'), (31, 'Rivalry'), (31, 'Sheer Force'), (32, 'Poison Point'), 
-(32, 'Rivalry'), (32, 'Hustle'), (33, 'Poison Point'), (33, 'Rivalry'), (33, 'Hustle'), 
-(34, 'Poison Point'), (34, 'Rivalry'), (34, 'Sheer Force'), (35, 'Cute Charm'), 
-(35, 'Magic Guard'), (35, 'Friend Guard'), (36, 'Cute Charm'), (36, 'Magic Guard'), 
-(36, 'Unaware'), (37, 'Flash Fire'), (37, 'Drought'), (38, 'Flash Fire'), (38, 'Drought'), 
-(39, 'Cute Charm'), (39, 'Competitive'), (40, 'Cute Charm'), (40, 'Competitive'), (40, 'Frisk');
+-- Insérer des capacités de Pokémon
+INSERT INTO ability (ability) VALUES 
+('Overgrow'), ('Chlorophyll'), ('Blaze'), ('Solar Power'), ('Torrent'), ('Rain Dish'), ('Shield Dust'), ('Run Away'), 
+('Shed Skin'), ('Compound Eyes'), ('Tinted Lens'), ('Swarm'), ('Sniper'), ('Keen Eye'), ('Tangled Feet'), ('Big Pecks'), 
+('Guts'), ('Hustle'), ('Intimidate'), ('Unnerve'), ('Static'), ('Lightning Rod'), ('Sand Veil'), ('Sand Rush'), 
+('Poison Point'), ('Rivalry'), ('Sheer Force'), ('Cute Charm'), ('Magic Guard'), ('Friend Guard'), ('Unaware'), 
+('Flash Fire'), ('Drought'), ('Competitive'), ('Frisk');
+
+-- Insérer des relations entre Pokémon et types
+INSERT INTO pokemon_type (pokemon_id, type_id)
+SELECT p.id, t.id FROM pokemon p JOIN type t ON 
+(p.id IN (1, 2, 3) AND t.type = 'Grass') OR 
+(p.id IN (1, 2, 3, 13, 14, 15, 29, 30, 31, 32, 33, 34) AND t.type = 'Poison') OR 
+(p.id IN (4, 5, 6, 37, 38) AND t.type = 'Fire') OR 
+(p.id IN (6, 12, 16, 17, 18, 21, 22) AND t.type = 'Flying') OR 
+(p.id IN (7, 8, 9) AND t.type = 'Water') OR 
+(p.id IN (10, 11, 12, 13, 14, 15) AND t.type = 'Bug') OR 
+(p.id IN (16, 17, 18, 19, 20, 21, 22, 39, 40) AND t.type = 'Normal') OR 
+(p.id IN (25, 26) AND t.type = 'Electric') OR 
+(p.id IN (27, 28, 31, 34) AND t.type = 'Ground') OR 
+(p.id IN (35, 36, 39, 40) AND t.type = 'Fairy');
+
+-- Insérer des relations entre Pokémon et capacités
+INSERT INTO pokemon_ability (pokemon_id, ability_id)
+SELECT p.id, a.id FROM pokemon p JOIN ability a ON 
+(p.id = 1 AND a.ability IN ('Overgrow', 'Chlorophyll')) OR 
+(p.id = 2 AND a.ability IN ('Overgrow', 'Chlorophyll')) OR 
+(p.id = 3 AND a.ability IN ('Overgrow', 'Chlorophyll')) OR 
+(p.id = 4 AND a.ability IN ('Blaze', 'Solar Power')) OR 
+(p.id = 5 AND a.ability IN ('Blaze', 'Solar Power')) OR 
+(p.id = 6 AND a.ability IN ('Blaze', 'Solar Power')) OR 
+(p.id = 7 AND a.ability IN ('Torrent', 'Rain Dish')) OR 
+(p.id = 8 AND a.ability IN ('Torrent', 'Rain Dish')) OR 
+(p.id = 9 AND a.ability IN ('Torrent', 'Rain Dish')) OR 
+(p.id = 10 AND a.ability IN ('Shield Dust', 'Run Away')) OR 
+(p.id = 11 AND a.ability IN ('Shed Skin')) OR 
+(p.id = 12 AND a.ability IN ('Compound Eyes', 'Tinted Lens')) OR 
+(p.id = 13 AND a.ability IN ('Shield Dust', 'Run Away')) OR 
+(p.id = 14 AND a.ability IN ('Shed Skin')) OR 
+(p.id = 15 AND a.ability IN ('Swarm', 'Sniper')) OR 
+(p.id = 16 AND a.ability IN ('Keen Eye', 'Tangled Feet', 'Big Pecks')) OR 
+(p.id = 17 AND a.ability IN ('Keen Eye', 'Tangled Feet', 'Big Pecks')) OR 
+(p.id = 18 AND a.ability IN ('Keen Eye', 'Tangled Feet', 'Big Pecks')) OR 
+(p.id = 19 AND a.ability IN ('Run Away', 'Guts')) OR 
+(p.id = 20 AND a.ability IN ('Run Away', 'Guts', 'Hustle')) OR 
+(p.id = 21 AND a.ability IN ('Keen Eye', 'Sniper')) OR 
+(p.id = 22 AND a.ability IN ('Keen Eye', 'Sniper')) OR 
+(p.id = 23 AND a.ability IN ('Intimidate', 'Shed Skin', 'Unnerve')) OR 
+(p.id = 24 AND a.ability IN ('Intimidate', 'Shed Skin', 'Unnerve')) OR 
+(p.id = 25 AND a.ability IN ('Static', 'Lightning Rod')) OR 
+(p.id = 26 AND a.ability IN ('Static', 'Lightning Rod')) OR 
+(p.id = 27 AND a.ability IN ('Sand Veil', 'Sand Rush')) OR 
+(p.id = 28 AND a.ability IN ('Sand Veil', 'Sand Rush')) OR 
+(p.id = 29 AND a.ability IN ('Poison Point', 'Rivalry', 'Hustle')) OR 
+(p.id = 30 AND a.ability IN ('Poison Point', 'Rivalry', 'Hustle')) OR 
+(p.id = 31 AND a.ability IN ('Poison Point', 'Rivalry', 'Sheer Force')) OR 
+(p.id = 32 AND a.ability IN ('Poison Point', 'Rivalry', 'Hustle')) OR 
+(p.id = 33 AND a.ability IN ('Poison Point', 'Rivalry', 'Hustle')) OR 
+(p.id = 34 AND a.ability IN ('Poison Point', 'Rivalry', 'Sheer Force')) OR 
+(p.id = 35 AND a.ability IN ('Cute Charm', 'Magic Guard', 'Friend Guard')) OR 
+(p.id = 36 AND a.ability IN ('Cute Charm', 'Magic Guard', 'Unaware')) OR 
+(p.id = 37 AND a.ability IN ('Flash Fire', 'Drought')) OR 
+(p.id = 38 AND a.ability IN ('Flash Fire', 'Drought')) OR 
+(p.id = 39 AND a.ability IN ('Cute Charm', 'Competitive')) OR 
+(p.id = 40 AND a.ability IN ('Cute Charm', 'Competitive', 'Frisk'));
