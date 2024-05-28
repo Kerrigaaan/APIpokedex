@@ -46,16 +46,10 @@ def add_ability_to_pokemon(pokemon_id: int, ability: PokemonAbility):
 
 @app.post("/pokemons/comments/{pokemon_id}/", response_model=dict)
 async def add_comment_to_pokemon(pokemon_id: int, comment: str):
-    """
-    Add a comment to a Pokémon.
-    """
     return database.add_comment_to_pokemon(pokemon_id, comment)
 
 @app.post("/pokemons/{pokemon_id}/favorite/", response_model=dict)
 async def add_pokemon_to_favorites(pokemon_id: int):
-    """
-    Add a Pokémon to favorites.
-    """
     return database.add_pokemon_to_favorites(pokemon_id)
 
 @app.get("/pokemons/{pokemon_id}", response_model=dict)
@@ -127,9 +121,6 @@ def get_pokemon_by_move(move_name: str):
 
 @app.get("/pokemons/search/", response_model=list)
 async def search_pokemon_by_type(types: str = Query(..., title="Type(s) of Pokémon")):
-    """
-    Search Pokémon by type(s).
-    """
     type_list = types.split(",")
     return database.search_pokemon_by_type(type_list)
 
@@ -141,9 +132,6 @@ async def filter_pokemon_by_stats(min_hp: int = None, max_hp: int = None,
                                   min_sp_defense: int = None, max_sp_defense: int = None,
                                   min_speed: int = None, max_speed: int = None,
                                   limit: int = 10):
-    """
-    Filter Pokémon by statistics.
-    """
     return database.filter_pokemon_by_stats(min_hp, max_hp,
                                             min_attack, max_attack,
                                             min_defense, max_defense,
@@ -154,23 +142,15 @@ async def filter_pokemon_by_stats(min_hp: int = None, max_hp: int = None,
 
 @app.get("/pokemons/search/name/", response_model=list)
 async def search_pokemon_by_name(name: str = Query(..., title="Name of Pokémon")):
-    """
-    Search Pokémon by name.
-    """
+   
     return database.search_pokemon_by_name(name)
 
 @app.get("/pokemons/comments/{pokemon_id}/", response_model=list)
 async def get_pokemon_comments(pokemon_id: int):
-    """
-    Get comments for a Pokémon.
-    """
     return database.get_pokemon_comments(pokemon_id)
 
 @app.get("/pokemons/favorites/", response_model=list)
 async def get_favorite_pokemons():
-    """
-    Get favorite Pokémon.
-    """
     return database.get_favorite_pokemons()
 
 @app.put("/pokemons/{pokemon_id}", response_model=dict)
