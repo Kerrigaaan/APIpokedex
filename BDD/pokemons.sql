@@ -1,10 +1,5 @@
--- Créer la base de données si elle n'existe pas
-CREATE DATABASE IF NOT EXISTS pokedex;
-
--- Utiliser la base de données
 USE pokedex;
 
--- Créer la table pour les Pokémon
 CREATE TABLE IF NOT EXISTS pokemon (
     id INT PRIMARY KEY,
     name VARCHAR(50),
@@ -17,13 +12,11 @@ CREATE TABLE IF NOT EXISTS pokemon (
     image_url VARCHAR(255)
 );
 
--- Créer la table pour les types de Pokémon
 CREATE TABLE IF NOT EXISTS type (
     id INT PRIMARY KEY AUTO_INCREMENT,
     type VARCHAR(50) UNIQUE
 );
 
--- Créer la table de relation entre Pokémon et types
 CREATE TABLE IF NOT EXISTS pokemon_type (
     pokemon_id INT,
     type_id INT,
@@ -32,13 +25,11 @@ CREATE TABLE IF NOT EXISTS pokemon_type (
     PRIMARY KEY (pokemon_id, type_id)
 );
 
--- Créer la table pour les capacités de Pokémon
 CREATE TABLE IF NOT EXISTS ability (
     id INT PRIMARY KEY AUTO_INCREMENT,
     ability VARCHAR(50) UNIQUE
 );
 
--- Créer la table de relation entre Pokémon et capacités
 CREATE TABLE IF NOT EXISTS pokemon_ability (
     pokemon_id INT,
     ability_id INT,
@@ -47,7 +38,6 @@ CREATE TABLE IF NOT EXISTS pokemon_ability (
     PRIMARY KEY (pokemon_id, ability_id)
 );
 
--- Insérer des données de base pour les Pokémon
 INSERT INTO pokemon (id, name, hp, attack, defense, sp_attack, sp_defense, speed, image_url) VALUES
 (1, 'Bulbasaur', 45, 49, 49, 65, 65, 45, '/images/1.png'),
 (2, 'Ivysaur', 60, 62, 63, 80, 80, 60, '/images/2.png'),
@@ -90,10 +80,8 @@ INSERT INTO pokemon (id, name, hp, attack, defense, sp_attack, sp_defense, speed
 (39, 'Jigglypuff', 115, 45, 20, 45, 25, 20, '/images/39.png'),
 (40, 'Wigglytuff', 140, 70, 45, 85, 50, 45, '/images/40.png');
 
--- Insérer des types de Pokémon
 INSERT INTO type (type) VALUES ('Grass'), ('Poison'), ('Fire'), ('Flying'), ('Water'), ('Bug'), ('Normal'), ('Electric'), ('Ground'), ('Fairy');
 
--- Insérer des capacités de Pokémon
 INSERT INTO ability (ability) VALUES 
 ('Overgrow'), ('Chlorophyll'), ('Blaze'), ('Solar Power'), ('Torrent'), ('Rain Dish'), ('Shield Dust'), ('Run Away'), 
 ('Shed Skin'), ('Compound Eyes'), ('Tinted Lens'), ('Swarm'), ('Sniper'), ('Keen Eye'), ('Tangled Feet'), ('Big Pecks'), 
@@ -101,7 +89,6 @@ INSERT INTO ability (ability) VALUES
 ('Poison Point'), ('Rivalry'), ('Sheer Force'), ('Cute Charm'), ('Magic Guard'), ('Friend Guard'), ('Unaware'), 
 ('Flash Fire'), ('Drought'), ('Competitive'), ('Frisk');
 
--- Insérer des relations entre Pokémon et types
 INSERT INTO pokemon_type (pokemon_id, type_id)
 SELECT p.id, t.id FROM pokemon p JOIN type t ON 
 (p.id IN (1, 2, 3) AND t.type = 'Grass') OR 
@@ -115,7 +102,6 @@ SELECT p.id, t.id FROM pokemon p JOIN type t ON
 (p.id IN (27, 28, 31, 34) AND t.type = 'Ground') OR 
 (p.id IN (35, 36, 39, 40) AND t.type = 'Fairy');
 
--- Insérer des relations entre Pokémon et capacités
 INSERT INTO pokemon_ability (pokemon_id, ability_id)
 SELECT p.id, a.id FROM pokemon p JOIN ability a ON 
 (p.id = 1 AND a.ability IN ('Overgrow', 'Chlorophyll')) OR 

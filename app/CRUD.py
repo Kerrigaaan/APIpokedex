@@ -1,13 +1,13 @@
 from sqlalchemy.orm import Session
-from . import models
+from . import schemas
 
 def get_pokemon(db: Session, pokemon_id: int):
-    return db.query(models.Pokemon).filter(models.Pokemon.id == pokemon_id).first()
+    return db.query(schemas.Pokemon).filter(schemas.Pokemon.id == pokemon_id).first()
 
 def get_pokemons(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Pokemon).offset(skip).limit(limit).all()
+    return db.query(schemas.Pokemon).offset(skip).limit(limit).all()
 
-def create_pokemon(db: Session, pokemon: models.Pokemon):
+def create_pokemon(db: Session, pokemon: schemas.Pokemon):
     db.add(pokemon)
     db.commit()
     db.refresh(pokemon)
