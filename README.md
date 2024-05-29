@@ -1,5 +1,7 @@
 # Guide d'utilisation
 
+Utilisation pour la BDD de mysql
+
 ## Lancer le programme
 Pour lancer le programme, double-cliquez sur le fichier `run.bat`. Cela lancera le serveur local.
 
