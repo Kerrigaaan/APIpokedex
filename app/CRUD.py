@@ -1,18 +1,22 @@
 from sqlalchemy.orm import Session
-from . import models
+from . import schemas
 
+# Obtient un Pokémon selon son identifiant dans la base de données.
 def get_pokemon(db: Session, pokemon_id: int):
-    return db.query(models.Pokemon).filter(models.Pokemon.id == pokemon_id).first()
+    return db.query(schemas.Pokemon).filter(schemas.Pokemon.id == pokemon_id).first()
 
+# Obtient une liste de Pokémon avec une pagination.
 def get_pokemons(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Pokemon).offset(skip).limit(limit).all()
+    return db.query(schemas.Pokemon).offset(skip).limit(limit).all()
 
-def create_pokemon(db: Session, pokemon: models.Pokemon):
+# Crée un nouveau Pokémon dans la base de données.
+def create_pokemon(db: Session, pokemon: schemas.Pokemon):
     db.add(pokemon)
     db.commit()
     db.refresh(pokemon)
     return pokemon
 
+# Met à jour les données d'un Pokémon existant dans la base de données.
 def update_pokemon(db: Session, pokemon_id: int, pokemon_data: dict):
     db_pokemon = get_pokemon(db, pokemon_id)
     if db_pokemon:
@@ -22,6 +26,7 @@ def update_pokemon(db: Session, pokemon_id: int, pokemon_data: dict):
         db.refresh(db_pokemon)
     return db_pokemon
 
+# Supprime un Pokémon de la base de données.
 def delete_pokemon(db: Session, pokemon_id: int):
     db_pokemon = get_pokemon(db, pokemon_id)
     if db_pokemon:
